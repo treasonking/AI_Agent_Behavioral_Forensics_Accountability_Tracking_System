@@ -1,0 +1,8 @@
+services:
+  agenttrace-api:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./reports:/app/reports
+    command: uvicorn backend.app.main:app --host 0.0.0.0 --port 8000

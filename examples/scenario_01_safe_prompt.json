@@ -1,0 +1,10 @@
+{
+  "session_id": "sess-safe-001",
+  "user_prompt": "이 문서를 요약해줘.",
+  "context_documents": [
+    {
+      "document_id": "doc-safe-001",
+      "content": "이 문서는 일반적인 업무 보고서입니다."
+    }
+  ]
+}
