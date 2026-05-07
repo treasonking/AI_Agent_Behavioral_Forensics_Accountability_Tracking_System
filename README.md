@@ -1,3 +1,5 @@
+[![CI](https://github.com/treasonking/AI_Agent_Behavioral_Forensics_Accountability_Tracking_System/actions/workflows/ci.yml/badge.svg)](https://github.com/treasonking/AI_Agent_Behavioral_Forensics_Accountability_Tracking_System/actions/workflows/ci.yml)
+
 # AgentTrace
 
 AgentTrace는 AI Agent의 자율 행동 과정에서 발생하는 프롬프트, 도구 호출, 데이터 접근, 외부 전송 시도를 포렌식 로그로 기록하고, SHA-256 Hash Chain과 책임 추적 그래프를 통해 사고 원인을 분석하는 시스템입니다.
@@ -48,10 +50,14 @@ Incident Report Generator
 
 ## 디렉터리 개요
 
-- [backend/app/main.py](/C:/Users/jho87/Downloads/AI_Agent_Behavioral_Forensics_Accountability_Tracking_System/backend/app/main.py)
-- [backend/app/agent/simulator.py](/C:/Users/jho87/Downloads/AI_Agent_Behavioral_Forensics_Accountability_Tracking_System/backend/app/agent/simulator.py)
-- [backend/app/forensic/event_logger.py](/C:/Users/jho87/Downloads/AI_Agent_Behavioral_Forensics_Accountability_Tracking_System/backend/app/forensic/event_logger.py)
-- [backend/app/reports/report_generator.py](/C:/Users/jho87/Downloads/AI_Agent_Behavioral_Forensics_Accountability_Tracking_System/backend/app/reports/report_generator.py)
+- [backend/app/main.py](./backend/app/main.py)
+- [backend/app/agent/simulator.py](./backend/app/agent/simulator.py)
+- [backend/app/forensic/event_logger.py](./backend/app/forensic/event_logger.py)
+- [backend/app/reports/report_generator.py](./backend/app/reports/report_generator.py)
+- [docs/architecture.md](./docs/architecture.md)
+- [docs/threat_model.md](./docs/threat_model.md)
+- [docs/forensic_log_format.md](./docs/forensic_log_format.md)
+- [docs/evaluation.md](./docs/evaluation.md)
 
 ## 실행 방법
 
@@ -68,7 +74,7 @@ pytest backend/tests -v
 
 검증 결과:
 
-- `pytest backend/tests -v` 기준 `33 passed in 1.44s`
+- `pytest backend/tests -v` 기준 `37 passed in 1.36s`
 - `/health` 경로 응답 확인 완료
 - `/agent/run` 외부 전송 시나리오에서 `BLOCK / CRITICAL / incident report generated` 확인 완료
 
@@ -86,6 +92,10 @@ curl -X POST http://127.0.0.1:8000/agent/run \
 - Prompt Injection File Read
 - External Transfer Attempt
 - Command Execution Attempt
+
+## 샘플 결과물
+
+- [Sample Incident Report](./reports/sample_incident_report.md)
 
 ## 실행 결과 예시
 

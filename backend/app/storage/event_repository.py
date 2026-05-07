@@ -22,12 +22,20 @@ class EventRepository:
 
     def _initialize(self) -> None:
         with self._lock:
+            existing_sql = self._connection.execute(
+                """
+                SELECT sql
+                FROM sqlite_master
+                WHERE type = 'table' AND name = 'forensic_events'
+                """
+            ).fetchone()
+
             self._connection.execute(
                 """
                 CREATE TABLE IF NOT EXISTS forensic_events (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     session_id TEXT NOT NULL,
-                    event_id TEXT NOT NULL UNIQUE,
+                    event_id TEXT NOT NULL,
                     timestamp TEXT NOT NULL,
                     actor TEXT NOT NULL,
                     event_type TEXT NOT NULL,
@@ -42,11 +50,87 @@ class EventRepository:
                     input_hash TEXT,
                     output_hash TEXT,
                     previous_event_hash TEXT,
-                    event_hash TEXT NOT NULL
+                    event_hash TEXT NOT NULL,
+                    UNIQUE(session_id, event_id)
                 )
                 """
             )
+            if existing_sql and existing_sql["sql"] and "event_id TEXT NOT NULL UNIQUE" in existing_sql["sql"]:
+                self._migrate_event_table()
             self._connection.commit()
+
+    def _migrate_event_table(self) -> None:
+        self._connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS forensic_events_v2 (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                session_id TEXT NOT NULL,
+                event_id TEXT NOT NULL,
+                timestamp TEXT NOT NULL,
+                actor TEXT NOT NULL,
+                event_type TEXT NOT NULL,
+                tool_name TEXT,
+                target TEXT,
+                input_summary TEXT,
+                output_summary TEXT,
+                risk_level TEXT NOT NULL,
+                responsibility_type TEXT NOT NULL,
+                reason_codes TEXT NOT NULL,
+                triggered_by_event_id TEXT,
+                input_hash TEXT,
+                output_hash TEXT,
+                previous_event_hash TEXT,
+                event_hash TEXT NOT NULL,
+                UNIQUE(session_id, event_id)
+            )
+            """
+        )
+        self._connection.execute(
+            """
+            INSERT INTO forensic_events_v2 (
+                id,
+                session_id,
+                event_id,
+                timestamp,
+                actor,
+                event_type,
+                tool_name,
+                target,
+                input_summary,
+                output_summary,
+                risk_level,
+                responsibility_type,
+                reason_codes,
+                triggered_by_event_id,
+                input_hash,
+                output_hash,
+                previous_event_hash,
+                event_hash
+            )
+            SELECT
+                id,
+                session_id,
+                event_id,
+                timestamp,
+                actor,
+                event_type,
+                tool_name,
+                target,
+                input_summary,
+                output_summary,
+                risk_level,
+                responsibility_type,
+                reason_codes,
+                triggered_by_event_id,
+                input_hash,
+                output_hash,
+                previous_event_hash,
+                event_hash
+            FROM forensic_events
+            """
+        )
+        self._connection.execute("DROP TABLE forensic_events")
+        self._connection.execute("ALTER TABLE forensic_events_v2 RENAME TO forensic_events")
 
     def reset_session(self, session_id: str) -> None:
         with self._lock:
@@ -55,6 +139,14 @@ class EventRepository:
                 (session_id,),
             )
             self._connection.commit()
+
+    def count_events(self, session_id: str) -> int:
+        with self._lock:
+            row = self._connection.execute(
+                "SELECT COUNT(*) AS count FROM forensic_events WHERE session_id = ?",
+                (session_id,),
+            ).fetchone()
+        return int(row["count"]) if row else 0
 
     def save_event(self, event: ForensicEvent) -> None:
         with self._lock:

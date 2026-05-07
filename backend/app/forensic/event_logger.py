@@ -30,10 +30,14 @@ class ForensicEventLogger:
         self.summary_limit = summary_limit
         self._session_counters: Dict[str, int] = {}
 
-    def start_session(self, session_id: Optional[str]) -> str:
+    def start_session(self, session_id: Optional[str], reset: bool = False) -> str:
         active_session_id = session_id or f"sess-{uuid4().hex[:12]}"
-        self._session_counters[active_session_id] = 0
-        self.repository.reset_session(active_session_id)
+        if reset:
+            self.repository.reset_session(active_session_id)
+            existing_count = 0
+        else:
+            existing_count = self.repository.count_events(active_session_id)
+        self._session_counters[active_session_id] = existing_count
         return active_session_id
 
     def _next_event_id(self, session_id: str) -> str:

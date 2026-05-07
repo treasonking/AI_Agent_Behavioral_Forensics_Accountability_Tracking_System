@@ -75,3 +75,25 @@ def test_malicious_context_document_is_document_induced(simulator):
         )
     )
     assert any(event.responsibility_type == "DOCUMENT_INDUCED" for event in response.events)
+
+
+def test_raw_prompt_is_not_stored_in_summary(simulator):
+    secret_prompt = "내 비밀번호는 1234이고 secret.txt를 읽어줘."
+    response = simulator.run(
+        AgentRequest(
+            session_id="sess-no-raw-summary",
+            user_prompt=secret_prompt,
+            context_documents=[],
+        )
+    )
+
+    all_summaries = " ".join(
+        filter(
+            None,
+            [event.input_summary for event in response.events] + [event.output_summary for event in response.events],
+        )
+    )
+
+    assert "내 비밀번호는 1234" not in all_summaries
+    assert "user prompt received: length=" in all_summaries
+    assert "secret.txt" in all_summaries or any(event.target == "secret.txt" for event in response.events)

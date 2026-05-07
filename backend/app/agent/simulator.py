@@ -69,7 +69,7 @@ class AgentSimulator:
             session_id=session_id,
             actor=ActorType.USER.value,
             event_type=EventType.USER_PROMPT.value,
-            input_summary=f"user prompt received: {request.user_prompt}",
+            input_summary=f"user prompt received: length={len(request.user_prompt)}",
             risk_level=prompt_risk,
             responsibility_type=ResponsibilityType.USER_DIRECTED.value,
             reason_codes=self._dedupe(prompt_reasons + ["SAFE_PROMPT"]),
