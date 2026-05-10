@@ -43,6 +43,34 @@ INJECTION_KEYWORDS = [
     "시스템 프롬프트",
     "system prompt",
 ]
+POLICY_BYPASS_KEYWORDS = [
+    "정책을 우회",
+    "보안 정책을 무시",
+    "policy bypass",
+    "bypass policy",
+]
+FILTER_DISABLE_KEYWORDS = [
+    "필터를 끄고",
+    "검열을 비활성화",
+    "disable filter",
+    "turn off filter",
+]
+SECRET_EXTRACTION_KEYWORDS = [
+    "api 키",
+    "api key",
+    "api_key",
+    "토큰",
+    "token",
+    "credential",
+    "client_secret",
+    "secret_key",
+    "추출",
+]
+ENV_FILE_KEYWORDS = [
+    ".env",
+    "환경변수 파일",
+    "env file",
+]
 EXFILTRATION_KEYWORDS = [
     "send to",
     "external transfer",
@@ -128,6 +156,22 @@ class RiskClassifier:
         if any(keyword in combined for keyword in SENSITIVE_KEYWORDS):
             risk = self.max_risk(risk, RiskLevel.HIGH.value)
             self._append_reason(reasons, "SENSITIVE_FILE_ACCESS")
+
+        if any(keyword in combined for keyword in POLICY_BYPASS_KEYWORDS):
+            risk = self.max_risk(risk, RiskLevel.HIGH.value)
+            self._append_reason(reasons, "POLICY_BYPASS_ATTEMPT")
+
+        if any(keyword in combined for keyword in FILTER_DISABLE_KEYWORDS):
+            risk = self.max_risk(risk, RiskLevel.HIGH.value)
+            self._append_reason(reasons, "FILTER_DISABLE_ATTEMPT")
+
+        if any(keyword in combined for keyword in SECRET_EXTRACTION_KEYWORDS):
+            risk = self.max_risk(risk, RiskLevel.HIGH.value)
+            self._append_reason(reasons, "SECRET_EXTRACTION")
+
+        if any(keyword in combined for keyword in ENV_FILE_KEYWORDS):
+            risk = self.max_risk(risk, RiskLevel.HIGH.value)
+            self._append_reason(reasons, "ENV_FILE_ACCESS")
 
         if any(keyword in normalized_content for keyword in INJECTION_KEYWORDS):
             risk = self.max_risk(risk, RiskLevel.HIGH.value)

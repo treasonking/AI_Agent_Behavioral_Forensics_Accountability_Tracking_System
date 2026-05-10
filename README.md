@@ -82,7 +82,7 @@ pytest backend/tests -v
 
 검증 결과:
 
-- `pytest backend/tests -v` 기준 `40 passed in 1.37s`
+- `pytest backend/tests -v` 기준 `45 passed in 1.82s`
 - `/health` 경로 응답 확인 완료
 - `/agent/run` 외부 전송 시나리오에서 `BLOCK / CRITICAL / incident report generated` 확인 완료
 

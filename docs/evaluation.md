@@ -33,7 +33,7 @@
 ## 5. 테스트 메모
 
 - 구현 기준 테스트 파일은 `backend/tests/` 아래에 작성되어 있습니다.
-- `pytest backend/tests -v` 실행 결과: `40 passed in 1.37s`
+- `pytest backend/tests -v` 실행 결과: `45 passed in 1.82s`
 - FastAPI 라우트 함수 직접 호출 검증 결과:
   - `/health` 응답: `{"status": "ok", "service": "AgentTrace"}`
   - `/agent/run` 악성 외부 전송 시나리오 응답: `action=BLOCK`, `risk_level=CRITICAL`, `incident_report_path` 생성 확인

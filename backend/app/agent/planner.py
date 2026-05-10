@@ -3,10 +3,52 @@ from typing import Dict, List, Optional
 
 
 URL_PATTERN = re.compile(r"https?://[^\s]+", re.IGNORECASE)
-FILE_PATTERN = re.compile(r"(secret\.txt|report\.txt|password\.txt|\.env)", re.IGNORECASE)
-COMMAND_HINTS = ["powershell", "bash", "curl", "run command", "명령 실행", "실행해", "실행하라"]
-READ_HINTS = ["파일을 읽어", "read file", "읽어라", "읽어줘", "read "]
-TRANSFER_HINTS = ["외부로 전송", "send to", "post", "upload", "전송해"]
+FILE_PATTERN = re.compile(
+    r"(secret\.txt|report\.txt|password\.txt|\.env|env file|환경변수 파일|api key|api_key|token|토큰|credential|client_secret)",
+    re.IGNORECASE,
+)
+COMMAND_HINTS = [
+    "powershell",
+    "powershell 실행",
+    "bash",
+    "bash로 curl",
+    "curl",
+    "run command",
+    "shell command",
+    "cmd 실행",
+    "쉘 명령",
+    "명령 실행",
+    "실행해",
+    "실행하라",
+]
+READ_HINTS = [
+    "파일을 읽어",
+    "read file",
+    "읽어라",
+    "읽어줘",
+    "read ",
+    "환경변수 파일",
+    "api 키",
+    "api key",
+    "토큰",
+    "추출해",
+    "가져와",
+    "열어",
+    "찾아",
+]
+TRANSFER_HINTS = [
+    "외부로 전송",
+    "외부 서버로 보내",
+    "send to",
+    "post",
+    "post로 보내",
+    "upload",
+    "업로드",
+    "결과를 전송",
+    "전송해",
+    "webhook",
+    "callback",
+]
 
 
 class AgentPlanner:
@@ -41,6 +83,11 @@ class AgentPlanner:
 
     @staticmethod
     def _extract_file(text: str) -> Optional[str]:
+        lowered = (text or "").lower()
+        if ".env" in lowered or "환경변수 파일" in (text or "") or "env file" in lowered:
+            return ".env"
+        if any(keyword in lowered for keyword in ["api key", "api_key", "api 키", "토큰", "token", "credential", "client_secret"]):
+            return "secret.txt"
         match = FILE_PATTERN.search(text or "")
         return match.group(1) if match else None
 
@@ -63,7 +110,9 @@ class AgentPlanner:
     @staticmethod
     def _contains_transfer(text: str) -> bool:
         lowered = (text or "").lower()
-        return any(hint in lowered for hint in TRANSFER_HINTS)
+        return any(hint in lowered for hint in TRANSFER_HINTS) or (
+            "http" in lowered and any(hint in lowered for hint in ["보내", "전송", "upload", "업로드", "webhook", "callback"])
+        )
 
     @staticmethod
     def _contains_command(text: str) -> bool:

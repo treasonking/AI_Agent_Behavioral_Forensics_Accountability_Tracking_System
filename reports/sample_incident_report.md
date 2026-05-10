@@ -31,8 +31,8 @@ User Prompt -> Agent Plan -> Tool Call -> Tool Result -> Policy Decision -> Fina
 
 | Event ID | Input Hash | Output Hash | Event Hash | Previous Event Hash |
 |---|---|---|---|---|
-| evt-0001 | sha256:... | - | sha256:... | - |
-| evt-0002 | sha256:... | - | sha256:... | sha256:... |
+| evt-0001 | sha256:1111111111111111111111111111111111111111111111111111111111111111 | - | sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa | - |
+| evt-0002 | sha256:2222222222222222222222222222222222222222222222222222222222222222 | - | sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb | sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa |
 
 ## 5. Reason Codes
 
