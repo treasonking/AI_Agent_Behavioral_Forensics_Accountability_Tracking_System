@@ -126,6 +126,16 @@ curl -X POST http://127.0.0.1:8000/agent/run \
 - [API Spec](./docs/api_spec.md)
 - [Evaluation](./docs/evaluation.md)
 
+
+## 현재 한계와 향후 개선
+
+- 현재 Agent는 실제 LLM이 아닌 deterministic Agent Simulator 기반입니다.
+- 탐지 로직은 rule/keyword 기반이며, 향후 LLM 기반 판단 보조 또는 LangGraph/LangChain Agent 연동으로 확장할 수 있습니다.
+- 현재 리포트는 Markdown 기반이며, 향후 PDF 자동 생성과 React Flow 기반 책임 추적 그래프 대시보드를 추가할 수 있습니다.
+- 본 프로젝트는 실제 외부 전송, 실제 명령 실행, 실제 민감 파일 접근을 수행하지 않고 Mock Tool 기반으로 안전하게 동작합니다.
+
+
 ## 포트폴리오 어필 문장
 
 AgentTrace는 AI Agent의 자율 행동 과정에서 발생하는 프롬프트, 도구 호출, 데이터 접근, 외부 전송 시도를 포렌식 로그로 기록하고, SHA-256 Hash Chain과 책임 추적 그래프를 통해 사고 원인을 분석하는 시스템입니다.
+
