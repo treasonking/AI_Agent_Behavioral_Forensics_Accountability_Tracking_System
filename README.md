@@ -66,6 +66,14 @@ pip install -r requirements.txt
 uvicorn backend.app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
+## Docker 실행
+
+```bash
+docker compose up --build
+```
+
+기본적으로 API는 `http://127.0.0.1:8000`에서 실행되며, 생성 리포트는 `./reports` 볼륨에 유지됩니다.
+
 ## 테스트 방법
 
 ```bash
@@ -74,7 +82,7 @@ pytest backend/tests -v
 
 검증 결과:
 
-- `pytest backend/tests -v` 기준 `37 passed in 1.36s`
+- `pytest backend/tests -v` 기준 `40 passed in 1.37s`
 - `/health` 경로 응답 확인 완료
 - `/agent/run` 외부 전송 시나리오에서 `BLOCK / CRITICAL / incident report generated` 확인 완료
 
@@ -96,6 +104,7 @@ curl -X POST http://127.0.0.1:8000/agent/run \
 ## 샘플 결과물
 
 - [Sample Incident Report](./reports/sample_incident_report.md)
+- [Sample Causal Graph](./reports/sample_causal_graph.json)
 
 ## 실행 결과 예시
 

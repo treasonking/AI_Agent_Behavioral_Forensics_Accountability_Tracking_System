@@ -4,5 +4,3 @@ pydantic
 pytest
 networkx
 python-multipart
-sqlalchemy
-markdown
